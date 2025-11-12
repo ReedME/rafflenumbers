@@ -16,6 +16,7 @@ function App() {
   const startTimeRef = useRef(null)
   const availableNumbersRef = useRef([])
   const isDrawingRef = useRef(false)
+  const lastUpdateTimeRef = useRef(0)
 
   // Load historical raffles from localStorage on mount
   useEffect(() => {
@@ -99,19 +100,26 @@ function App() {
       
       setCurrentDisplay(null)
       
-      const duration = 3000 + Math.random() * 3000 // 3-6 seconds
+      const duration = 4000 + Math.random() * 3000 // 4-7 seconds
       const startTime = Date.now()
       startTimeRef.current = startTime
+      lastUpdateTimeRef.current = startTime
+      const updateInterval = 50 // Update display every 150ms (slower scroll speed)
 
       const animate = () => {
         const elapsed = Date.now() - startTime
         const progress = Math.min(elapsed / duration, 1)
+        const now = Date.now()
         
-        // Random number from available pool for animation display
-        const available = availableNumbersRef.current
-        const randomIndex = Math.floor(Math.random() * available.length)
-        const displayNumber = available[randomIndex]
-        setCurrentDisplay(displayNumber)
+        // Only update display if enough time has passed (throttle for slower scroll)
+        if (now - lastUpdateTimeRef.current >= updateInterval) {
+          // Random number from available pool for animation display
+          const available = availableNumbersRef.current
+          const randomIndex = Math.floor(Math.random() * available.length)
+          const displayNumber = available[randomIndex]
+          setCurrentDisplay(displayNumber)
+          lastUpdateTimeRef.current = now
+        }
 
         if (progress < 1) {
           animationRef.current = requestAnimationFrame(animate)
@@ -208,7 +216,7 @@ function App() {
     <div className="app">
       {!isRaffleActive ? (
         <div className="setup-screen">
-          <h1 className="title">Raffle Number Drawer</h1>
+          <h1 className="title">LHIBC Raffles</h1>
           <div className="setup-form">
             <div className="form-group">
               <label htmlFor="raffleName">Raffle Name:</label>

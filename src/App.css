@@ -247,6 +247,7 @@ body {
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  overflow: hidden;
 }
 
 .raffle-header {
@@ -271,12 +272,13 @@ body {
 }
 
 .draw-area {
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 400px;
   padding: 2rem 0;
+  overflow: hidden;
 }
 
 .winning-number {
@@ -376,6 +378,7 @@ body {
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
 }
 
 .drawn-numbers h2 {
@@ -466,8 +469,8 @@ body {
   background: rgba(255, 255, 255, 0.5);
 }
 
-/* iPad and tablet optimizations */
-@media (min-width: 768px) and (max-width: 1024px) {
+/* iPad and tablet optimizations - Portrait */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
   .app {
     padding: 1.5rem;
   }
@@ -492,8 +495,8 @@ body {
   }
 }
 
-/* iPad Pro and larger tablets */
-@media (min-width: 1024px) and (max-width: 1366px) {
+/* iPad Pro and larger tablets - Portrait */
+@media (min-width: 1024px) and (max-width: 1366px) and (orientation: portrait) {
   .winning-number {
     font-size: 14rem;
   }
@@ -504,21 +507,98 @@ body {
 }
 
 /* Landscape orientation optimizations */
-@media (orientation: landscape) and (max-height: 768px) {
+@media (orientation: landscape) and (max-height: 1024px) {
   .raffle-screen {
-    padding: 1rem;
+    padding: 1rem 1.5rem;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .raffle-header {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  .raffle-title {
+    font-size: 2.2rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .raffle-range {
+    font-size: 1.3rem;
   }
   
   .draw-area {
-    min-height: 300px;
+    min-height: 0;
+    flex: 0 1 auto;
+    padding: 0.5rem 0;
+    max-height: 40vh;
   }
   
   .winning-number {
-    font-size: 10rem;
+    font-size: 8rem;
+  }
+  
+  .controls {
+    margin: 0.75rem 0;
+  }
+  
+  .btn-draw {
+    font-size: 1.5rem;
+    padding: 1.25rem 3rem;
+    min-width: 250px;
   }
   
   .drawn-numbers {
-    max-height: 150px;
+    max-height: 18vh;
+    margin-bottom: 0.5rem;
+    padding: 1rem 1.5rem;
+    flex-shrink: 0;
+  }
+  
+  .drawn-numbers h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .drawn-number-badge {
+    font-size: 1.3rem;
+    padding: 0.6rem 1.2rem;
+    min-width: 60px;
+  }
+  
+  .btn-end-raffle {
+    bottom: 1rem;
+    right: 1rem;
+    font-size: 1.1rem;
+    padding: 0.9rem 1.8rem;
+  }
+}
+
+/* iPad landscape specific - larger iPads */
+@media (orientation: landscape) and (min-width: 1024px) and (max-height: 768px) {
+  .winning-number {
+    font-size: 9rem;
+  }
+  
+  .draw-area {
+    max-height: 35vh;
+    padding: 0.25rem 0;
+  }
+  
+  .drawn-numbers {
+    max-height: 22vh;
+    padding: 1.25rem 1.75rem;
+  }
+  
+  .drawn-numbers h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .drawn-number-badge {
+    font-size: 1.4rem;
+    padding: 0.7rem 1.4rem;
   }
 }
 
