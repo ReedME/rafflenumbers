@@ -1,0 +1,646 @@
+/* index.css */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* App.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  user-select: none;
+  overflow-x: hidden;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  padding: 2rem;
+}
+
+/* Setup Screen */
+.setup-screen {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 2rem;
+}
+
+.setup-form {
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 3rem;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.input-large {
+  padding: 1rem 1.5rem;
+  font-size: 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  outline: none;
+  transition: all 0.3s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: manipulation;
+  user-select: text;
+  min-height: 44px; /* iOS minimum touch target */
+}
+
+.input-large:focus {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.input-large::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-danger,
+.btn-draw,
+.btn-end-raffle {
+  padding: 1.5rem 3rem;
+  font-size: 1.8rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.3);
+  touch-action: manipulation;
+  min-height: 44px; /* iOS minimum touch target */
+  min-width: 44px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1.2rem;
+  padding: 1rem 2rem;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.btn-danger {
+  background: rgba(220, 53, 69, 0.8);
+  color: white;
+  font-size: 1.2rem;
+  padding: 1rem 2rem;
+}
+
+.btn-danger:hover {
+  background: rgba(220, 53, 69, 1);
+}
+
+.btn-large {
+  font-size: 2rem;
+  padding: 2rem 4rem;
+}
+
+.history-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* History Panel */
+.history-panel {
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  max-height: 60vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.history-panel h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.history-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 1.5rem;
+  border-left: 4px solid rgba(255, 255, 255, 0.5);
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.history-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.history-date {
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.history-range {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
+}
+
+.history-numbers {
+  font-size: 1.2rem;
+  opacity: 0.8;
+  word-break: break-word;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* Raffle Screen */
+.raffle-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  overflow: hidden;
+}
+
+.raffle-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.raffle-title {
+  font-size: 3.5rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.5px;
+}
+
+.raffle-range {
+  font-size: 1.8rem;
+  opacity: 0.85;
+  font-weight: 500;
+}
+
+.draw-area {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 2rem 0;
+  overflow: hidden;
+}
+
+.winning-number {
+  font-size: 15rem;
+  font-weight: 900;
+  text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 215, 0, 0.3);
+  transition: transform 0.1s ease;
+  color: #ffd700;
+  text-align: center;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.winning-number.drawing {
+  animation: pulse 0.2s ease-in-out infinite;
+  color: #ff6b6b;
+  text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 107, 107, 0.4);
+}
+
+.winning-number.final {
+  animation: finalReveal 0.5s ease-out;
+  color: #ffd700;
+  text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.5);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes finalReveal {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.placeholder {
+  font-size: 3rem;
+  opacity: 0.4;
+  text-align: center;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0 2rem 0;
+  padding: 0 1rem;
+}
+
+.btn-draw {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  min-width: 320px;
+  padding: 1.75rem 4rem;
+  font-size: 2rem;
+  box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+}
+
+.btn-draw:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5);
+}
+
+.btn-draw:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-draw:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.drawn-numbers {
+  background: rgba(255, 255, 255, 0.15);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 1.75rem 2rem;
+  margin-top: auto;
+  margin-bottom: 5rem;
+  max-height: 220px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.drawn-numbers h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.numbers-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+  min-height: 60px;
+}
+
+.drawn-number-badge {
+  background: rgba(255, 255, 255, 0.25);
+  padding: 0.9rem 1.8rem;
+  border-radius: 12px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  min-width: 70px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.drawn-number-badge:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.no-numbers {
+  font-size: 1.5rem;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.btn-end-raffle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+  font-size: 1.4rem;
+  padding: 1.25rem 2.5rem;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-end-raffle:hover {
+  background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.5);
+}
+
+.btn-end-raffle:active {
+  transform: translateY(0);
+}
+
+/* Scrollbar styling */
+.history-panel::-webkit-scrollbar,
+.drawn-numbers::-webkit-scrollbar {
+  width: 12px;
+}
+
+.history-panel::-webkit-scrollbar-track,
+.drawn-numbers::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.history-panel::-webkit-scrollbar-thumb,
+.drawn-numbers::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.history-panel::-webkit-scrollbar-thumb:hover,
+.drawn-numbers::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* iPad and tablet optimizations - Portrait */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .app {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 3.5rem;
+  }
+
+  .winning-number {
+    font-size: 12rem;
+  }
+
+  .raffle-title {
+    font-size: 3rem;
+  }
+
+  .btn-end-raffle {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    font-size: 1.2rem;
+    padding: 1rem 1.5rem;
+  }
+}
+
+/* iPad Pro and larger tablets - Portrait */
+@media (min-width: 1024px) and (max-width: 1366px) and (orientation: portrait) {
+  .winning-number {
+    font-size: 14rem;
+  }
+
+  .raffle-title {
+    font-size: 3.5rem;
+  }
+}
+
+/* Landscape orientation optimizations */
+@media (orientation: landscape) and (max-height: 1024px) {
+  .raffle-screen {
+    padding: 1rem 1.5rem;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .raffle-header {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .raffle-title {
+    font-size: 2.2rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .raffle-range {
+    font-size: 1.3rem;
+  }
+
+  .draw-area {
+    min-height: 0;
+    flex: 0 1 auto;
+    padding: 0.5rem 0;
+    max-height: 40vh;
+  }
+
+  .winning-number {
+    font-size: 8rem;
+  }
+
+  .controls {
+    margin: 0.75rem 0;
+  }
+
+  .btn-draw {
+    font-size: 1.5rem;
+    padding: 1.25rem 3rem;
+    min-width: 250px;
+  }
+
+  .drawn-numbers {
+    max-height: 18vh;
+    margin-bottom: 0.5rem;
+    padding: 1rem 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .drawn-numbers h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .drawn-number-badge {
+    font-size: 1.3rem;
+    padding: 0.6rem 1.2rem;
+    min-width: 60px;
+  }
+
+  .btn-end-raffle {
+    bottom: 1rem;
+    right: 1rem;
+    font-size: 1.1rem;
+    padding: 0.9rem 1.8rem;
+  }
+}
+
+/* iPad landscape specific - larger iPads */
+@media (orientation: landscape) and (min-width: 1024px) and (max-height: 768px) {
+  .winning-number {
+    font-size: 9rem;
+  }
+
+  .draw-area {
+    max-height: 35vh;
+    padding: 0.25rem 0;
+  }
+
+  .drawn-numbers {
+    max-height: 22vh;
+    padding: 1.25rem 1.75rem;
+  }
+
+  .drawn-numbers h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .drawn-number-badge {
+    font-size: 1.4rem;
+    padding: 0.7rem 1.4rem;
+  }
+}
+
+/* Responsive adjustments for TV/large screens */
+@media (min-width: 1920px) {
+  .title {
+    font-size: 5rem;
+  }
+
+  .winning-number {
+    font-size: 20rem;
+  }
+
+  .raffle-title {
+    font-size: 4.5rem;
+  }
+
+  .btn-large {
+    font-size: 2.5rem;
+    padding: 2.5rem 5rem;
+  }
+}
