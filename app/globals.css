@@ -270,6 +270,26 @@ body {
   padding-bottom: 0.7rem;
 }
 
+/* Inline validation messages (no browser alert popups) */
+.form-error {
+  margin-top: -0.4rem;
+  padding: 0.7rem 1rem;
+  border-radius: 0.6rem;
+  background: rgba(226, 58, 69, 0.12);
+  border-left: 3px solid var(--scarlet);
+  color: #ff9aa2;
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.stage-error {
+  margin-top: 0.5rem;
+  text-align: center;
+  color: #ff9aa2;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
 /* History */
 .history {
   width: 100%;
@@ -287,6 +307,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  max-height: 46vh;
+  overflow-y: auto;
+  padding-right: 0.4rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(246, 239, 228, 0.25) transparent;
 }
 
 .history-item {
@@ -584,7 +609,6 @@ body {
   position: relative;
   display: block;
   overflow: hidden;
-  perspective: 320px;
   container-type: size;
   /* Fit all reels in the available width (100cqw = board-area inner width),
      capped by viewport height. Height tracks width via aspect-ratio so 1 reel
@@ -617,6 +641,10 @@ body {
 .flap-stack {
   position: absolute;
   inset: 0;
+  /* Perspective must live on the leaves' direct parent, or the fold renders
+     flat (the "split" look). This is what makes the fold read as real 3D. */
+  perspective: 240px;
+  perspective-origin: center center;
 }
 
 .flap-folds {
@@ -678,6 +706,26 @@ body {
   animation: foldBottom var(--flip-half) ease-out var(--flip-half) forwards;
 }
 
+/* Shading sells the fold as 3D: the leaf darkens as it tips away from us */
+.flap-fold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.flap-fold--top::after {
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.55) 100%);
+  opacity: 0;
+  animation: shadeIn var(--flip-half) ease-in forwards;
+}
+
+.flap-fold--bottom::after {
+  background: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 0.55) 100%);
+  opacity: 0.65;
+  animation: shadeOut var(--flip-half) ease-out var(--flip-half) forwards;
+}
+
 @keyframes foldTop {
   from {
     transform: rotateX(0deg);
@@ -693,6 +741,24 @@ body {
   }
   to {
     transform: rotateX(0deg);
+  }
+}
+
+@keyframes shadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shadeOut {
+  from {
+    opacity: 0.65;
+  }
+  to {
+    opacity: 0;
   }
 }
 
@@ -763,10 +829,13 @@ body {
 
 .stub-rail {
   display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
   gap: 0.6rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding-bottom: 0.25rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: clamp(3.4rem, 16vh, 8.5rem);
+  padding-right: 0.25rem;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: rgba(246, 239, 228, 0.25) transparent;

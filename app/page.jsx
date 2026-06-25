@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { primeAudio, playTick, playLock } from './flipSound'
 
 function PoweredBy() {
   return (
@@ -79,6 +80,7 @@ export default function Home() {
   })
   const [showSettings, setShowSettings] = useState(false)
   const [draftSettings, setDraftSettings] = useState(settings)
+  const [error, setError] = useState('')
 
   const isDrawingRef = useRef(false)
   const revealTimersRef = useRef([])
@@ -161,23 +163,24 @@ export default function Home() {
 
   const startRaffle = () => {
     if (!raffleName.trim()) {
-      alert('Please enter a raffle name')
+      setError('Enter a raffle name to start.')
       return
     }
 
-    const min = parseInt(minNumber) || 1
-    const max = parseInt(maxNumber) || 100
+    const min = parseInt(minNumber, 10)
+    const max = parseInt(maxNumber, 10)
 
     if (isNaN(min) || isNaN(max)) {
-      alert('Please enter valid numbers')
+      setError('Enter valid ticket numbers.')
       return
     }
 
     if (min >= max) {
-      alert('Min number must be less than max number')
+      setError('The first ticket must be lower than the last.')
       return
     }
 
+    setError('')
     setIsRaffleActive(true)
     setDrawnNumbers([])
     setCurrentDisplay(null)
@@ -200,54 +203,44 @@ export default function Home() {
     // Check both state and ref to prevent race conditions
     if (isDrawing || isDrawingRef.current) return
 
-    // Set drawing flag immediately using ref to prevent double-clicks
-    isDrawingRef.current = true
-    setIsDrawing(true)
-    setCurrentDisplay(null)
-
-    // Parse min and max numbers
     const min = parseInt(minNumber) || 1
     const max = parseInt(maxNumber) || 100
 
-    // Get current drawn numbers using functional update to ensure we have latest state
-    setDrawnNumbers((currentDrawn) => {
-      const drawnSet = new Set(currentDrawn)
+    // Draws are serialised (guarded above), so the latest drawnNumbers is current
+    const drawnSet = new Set(drawnNumbers)
+    const availableNumbers = []
+    for (let i = min; i <= max; i++) {
+      if (!drawnSet.has(i)) availableNumbers.push(i)
+    }
 
-      // Build available numbers array (numbers not yet drawn)
-      const availableNumbers = []
-      for (let i = min; i <= max; i++) {
-        if (!drawnSet.has(i)) {
-          availableNumbers.push(i)
-        }
-      }
+    if (availableNumbers.length === 0) {
+      setError('Every ticket in this range has been drawn.')
+      return
+    }
 
-      if (availableNumbers.length === 0) {
-        alert('All numbers have been drawn!')
-        isDrawingRef.current = false
-        setIsDrawing(false)
-        return currentDrawn
-      }
+    setError('')
+    isDrawingRef.current = true
+    setIsDrawing(true)
+    setCurrentDisplay(null)
+    primeAudio() // unlock/resume audio from this click gesture
 
-      // Pick the winning number up front so we can reveal its digits one by one
-      const finalNumber =
-        availableNumbers[Math.floor(Math.random() * availableNumbers.length)]
+    // Pick the winning number up front so we can reveal its digits one by one
+    const finalNumber =
+      availableNumbers[Math.floor(Math.random() * availableNumbers.length)]
 
-      // One reel per digit of the largest ticket, so every draw shows the same
-      // number of reels. The winner is zero-padded to fit (e.g. max 2000 → "0084").
-      const slotCount = String(Math.max(1, max)).length
-      const finalDigits = String(finalNumber).padStart(slotCount, '0').split('')
+    // One reel per digit of the largest ticket, so every draw shows the same
+    // number of reels. The winner is zero-padded to fit (e.g. max 2000 → "0084").
+    const slotCount = String(Math.max(1, max)).length
+    const finalDigits = String(finalNumber).padStart(slotCount, '0').split('')
 
-      // Every reel starts spinning at once; they lock one at a time, right to left
-      setRevealDigits(
-        finalDigits.map(() => ({
-          char: String(Math.floor(Math.random() * 10)),
-          locked: false,
-        }))
-      )
-      revealDigitsSequentially(finalDigits, finalNumber)
-
-      return currentDrawn
-    })
+    // Every reel starts spinning at once; they lock one at a time, right to left
+    setRevealDigits(
+      finalDigits.map(() => ({
+        char: String(Math.floor(Math.random() * 10)),
+        locked: false,
+      }))
+    )
+    revealDigitsSequentially(finalDigits, finalNumber)
   }
 
   // Spin every reel at once, then lock them one at a time from right to left.
@@ -258,8 +251,10 @@ export default function Home() {
 
     const lockedSlots = new Set()
 
-    // All not-yet-locked reels step through digits together, one flip at a time
+    // All not-yet-locked reels step through digits together, one flip at a time.
+    // One tick per step voices the whole row flipping in unison.
     scrambleIntervalRef.current = setInterval(() => {
+      playTick()
       setRevealDigits((prev) =>
         prev.map((slot, idx) =>
           lockedSlots.has(idx)
@@ -279,6 +274,7 @@ export default function Home() {
     order.forEach((slotIdx, step) => {
       const lockTimer = setTimeout(() => {
         lockedSlots.add(slotIdx)
+        playLock()
         setRevealDigits((prev) =>
           prev.map((slot, idx) =>
             idx === slotIdx
@@ -328,6 +324,7 @@ export default function Home() {
     isDrawingRef.current = false
     setIsDrawing(false)
     setRevealDigits([])
+    setError('')
 
     // Save to historical raffles
     if (raffleName && drawnNumbers.length > 0) {
@@ -429,7 +426,10 @@ export default function Home() {
                   id="raffleName"
                   type="text"
                   value={raffleName}
-                  onChange={(e) => setRaffleName(e.target.value)}
+                  onChange={(e) => {
+                    setRaffleName(e.target.value)
+                    if (error) setError('')
+                  }}
                   placeholder="e.g. Friday meat tray"
                   className="field"
                   autoComplete="off"
@@ -446,7 +446,10 @@ export default function Home() {
                     type="number"
                     inputMode="numeric"
                     value={minNumber}
-                    onChange={(e) => setMinNumber(e.target.value)}
+                    onChange={(e) => {
+                      setMinNumber(e.target.value)
+                      if (error) setError('')
+                    }}
                     onBlur={(e) => {
                       const value = e.target.value.trim()
                       if (value === '' || isNaN(parseInt(value))) {
@@ -470,7 +473,10 @@ export default function Home() {
                     type="number"
                     inputMode="numeric"
                     value={maxNumber}
-                    onChange={(e) => setMaxNumber(e.target.value)}
+                    onChange={(e) => {
+                      setMaxNumber(e.target.value)
+                      if (error) setError('')
+                    }}
                     onBlur={(e) => {
                       const value = e.target.value.trim()
                       if (value === '' || isNaN(parseInt(value))) {
@@ -483,6 +489,12 @@ export default function Home() {
                   />
                 </div>
               </div>
+
+              {error && (
+                <p className="form-error" role="alert">
+                  {error}
+                </p>
+              )}
 
               <button onClick={startRaffle} className="btn btn--start">
                 Start raffle
@@ -690,6 +702,11 @@ export default function Home() {
                   ? 'Draw next ticket'
                   : 'Draw ticket'}
             </button>
+            {error && (
+              <p className="stage-error" role="alert">
+                {error}
+              </p>
+            )}
           </main>
 
           <footer className="drawn">
