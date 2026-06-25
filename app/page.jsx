@@ -15,6 +15,48 @@ function PoweredBy() {
   )
 }
 
+// A single split-flap reel. Whenever `value` changes it runs a real fold:
+// the old digit's top panel folds down while the new digit's bottom folds in.
+function FlapDigit({ value }) {
+  const v = String(value)
+  const [flip, setFlip] = useState({ prev: v, curr: v, animating: false, id: 0 })
+  const prevRef = useRef(v)
+
+  useEffect(() => {
+    if (v !== prevRef.current) {
+      setFlip((f) => ({ prev: prevRef.current, curr: v, animating: true, id: f.id + 1 }))
+      prevRef.current = v
+    }
+  }, [v])
+
+  // Once the fold lands, the bottom static panel adopts the new digit
+  const settle = () => setFlip((f) => ({ ...f, prev: f.curr, animating: false }))
+
+  return (
+    <span className="flap-stack">
+      <span className="flap-half flap-half--top">
+        <span className="flap-glyph">{flip.curr}</span>
+      </span>
+      <span className="flap-half flap-half--bottom">
+        <span className="flap-glyph">{flip.prev}</span>
+      </span>
+      {flip.animating && (
+        <span className="flap-folds" key={flip.id}>
+          <span className="flap-half flap-fold flap-fold--top">
+            <span className="flap-glyph">{flip.prev}</span>
+          </span>
+          <span
+            className="flap-half flap-fold flap-fold--bottom"
+            onAnimationEnd={settle}
+          >
+            <span className="flap-glyph">{flip.curr}</span>
+          </span>
+        </span>
+      )}
+    </span>
+  )
+}
+
 export default function Home() {
   const [raffleName, setRaffleName] = useState('')
   const [minNumber, setMinNumber] = useState('1')
@@ -198,7 +240,7 @@ export default function Home() {
       // Every reel starts spinning at once; they lock one at a time, right to left
       setRevealDigits(
         finalDigits.map(() => ({
-          char: Math.floor(Math.random() * 10),
+          char: String(Math.floor(Math.random() * 10)),
           locked: false,
         }))
       )
@@ -216,16 +258,16 @@ export default function Home() {
 
     const lockedSlots = new Set()
 
-    // All not-yet-locked reels shuffle together
+    // All not-yet-locked reels step through digits together, one flip at a time
     scrambleIntervalRef.current = setInterval(() => {
       setRevealDigits((prev) =>
         prev.map((slot, idx) =>
           lockedSlots.has(idx)
             ? slot
-            : { char: Math.floor(Math.random() * 10), locked: false }
+            : { char: String((parseInt(slot.char, 10) + 1) % 10), locked: false }
         )
       )
-    }, 70)
+    }, 230)
 
     // Lock order follows the venue's reveal-direction setting.
     // 'rtl' (default): right-most reel stops first, working leftward.
@@ -633,7 +675,7 @@ export default function Home() {
             >
               {boardCards.map((card) => (
                 <span key={card.key} className={`flap flap--${card.state}`}>
-                  <span className="flap-digit">{card.char}</span>
+                  <FlapDigit value={card.char} />
                 </span>
               ))}
             </div>
