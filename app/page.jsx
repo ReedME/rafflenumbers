@@ -2,6 +2,19 @@
 
 import { useState, useEffect, useRef } from 'react'
 
+function PoweredBy() {
+  return (
+    <a
+      className="powered"
+      href="https://propellorsoft.com"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Powered by <span className="powered-brand">PropellorSoft</span>
+    </a>
+  )
+}
+
 export default function Home() {
   const [raffleName, setRaffleName] = useState('')
   const [minNumber, setMinNumber] = useState('1')
@@ -476,6 +489,8 @@ export default function Home() {
                 )}
               </div>
             )}
+
+            <PoweredBy />
           </div>
 
           {showSettings && (
@@ -660,6 +675,8 @@ export default function Home() {
               )}
             </div>
           </footer>
+
+          <PoweredBy />
         </div>
       )}
     </div>
