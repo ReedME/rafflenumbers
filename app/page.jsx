@@ -20,6 +20,7 @@ export default function Home() {
     venueName: 'LHIBC',
     defaultMin: '1',
     defaultMax: '100',
+    revealDirection: 'rtl', // 'rtl' = right-to-left, 'ltr' = left-to-right
   })
   const [showSettings, setShowSettings] = useState(false)
   const [draftSettings, setDraftSettings] = useState(settings)
@@ -93,6 +94,7 @@ export default function Home() {
       venueName: draftSettings.venueName.trim() || 'LHIBC',
       defaultMin: cleanInt(draftSettings.defaultMin, '1'),
       defaultMax: cleanInt(draftSettings.defaultMax, '100'),
+      revealDirection: draftSettings.revealDirection === 'ltr' ? 'ltr' : 'rtl',
     }
     setSettings(next)
     localStorage.setItem('raffleSettings', JSON.stringify(next))
@@ -212,8 +214,11 @@ export default function Home() {
       )
     }, 70)
 
-    // Right-most reel stops first, working leftward
-    const order = finalDigits.map((_, idx) => idx).reverse()
+    // Lock order follows the venue's reveal-direction setting.
+    // 'rtl' (default): right-most reel stops first, working leftward.
+    // 'ltr': left-most reel stops first, working rightward.
+    const order = finalDigits.map((_, idx) => idx)
+    if (settings.revealDirection !== 'ltr') order.reverse()
 
     let elapsed = 900 // first reel stops after a beat
     order.forEach((slotIdx, step) => {
@@ -537,6 +542,36 @@ export default function Home() {
                       }
                       className="field"
                     />
+                  </div>
+                </div>
+
+                <div className="field-group">
+                  <label className="field-label">Reveal direction</label>
+                  <div className="segmented" role="group" aria-label="Reveal direction">
+                    <button
+                      type="button"
+                      className={`seg${
+                        draftSettings.revealDirection !== 'ltr' ? ' seg--on' : ''
+                      }`}
+                      aria-pressed={draftSettings.revealDirection !== 'ltr'}
+                      onClick={() =>
+                        setDraftSettings((d) => ({ ...d, revealDirection: 'rtl' }))
+                      }
+                    >
+                      Right to left
+                    </button>
+                    <button
+                      type="button"
+                      className={`seg${
+                        draftSettings.revealDirection === 'ltr' ? ' seg--on' : ''
+                      }`}
+                      aria-pressed={draftSettings.revealDirection === 'ltr'}
+                      onClick={() =>
+                        setDraftSettings((d) => ({ ...d, revealDirection: 'ltr' }))
+                      }
+                    >
+                      Left to right
+                    </button>
                   </div>
                 </div>
 
