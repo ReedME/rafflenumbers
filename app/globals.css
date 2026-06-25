@@ -16,8 +16,8 @@
   --gold: #f4c249; /* the winner */
   --line: rgba(246, 239, 228, 0.12);
 
-  --font-display: 'Archivo', system-ui, sans-serif;
-  --font-mono: 'Martian Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --font-display: var(--font-archivo), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-martian), ui-monospace, 'SFMono-Regular', monospace;
 
   --radius: 1rem;
   --safe-t: env(safe-area-inset-top, 0px);
